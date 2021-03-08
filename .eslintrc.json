@@ -36,6 +36,7 @@
         "import/prefer-default-export": "off",
         "no-unused-expressions": "off",
         "no-use-before-define": "off",
+        "camelcase": "off",
         "import/extensions": [
             "error",
             "ignorePackages",
