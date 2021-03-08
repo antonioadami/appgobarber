@@ -10,6 +10,7 @@ import {
     ProfileButton,
     UserAvatar,
     ProvidersList,
+    ProvidersListTitle,
     ProviderContainer,
     ProviderAvatar,
     ProviderInfo,
@@ -43,6 +44,13 @@ const Dashboard: React.FC = () => {
         navigate('Profile');
     }, [navigate]);
 
+    const navigateToCreateAppointment = useCallback(
+        (providerId: string) => {
+            navigate('CreateAppointment', { providerId });
+        },
+        [navigate],
+    );
+
     return (
         <Container>
             <Header>
@@ -59,8 +67,13 @@ const Dashboard: React.FC = () => {
             <ProvidersList
                 data={providers}
                 keyExtractor={provider => provider.id}
+                ListHeaderComponent={
+                    <ProvidersListTitle>Cabeleireiros</ProvidersListTitle>
+                }
                 renderItem={({ item: provider }) => (
-                    <ProviderContainer>
+                    <ProviderContainer
+                        onPress={() => navigateToCreateAppointment(provider.id)}
+                    >
                         <ProviderAvatar source={{ uri: provider.avatar_url }} />
                         <ProviderInfo>
                             <ProviderName>{provider.name}</ProviderName>
@@ -68,14 +81,14 @@ const Dashboard: React.FC = () => {
                                 <Icon
                                     name="calendar"
                                     size={14}
-                                    color="ff9000"
+                                    color="#ff9000"
                                 />
                                 <ProviderMetaText>
                                     Segunda à sexta
                                 </ProviderMetaText>
                             </ProviderMeta>
                             <ProviderMeta>
-                                <Icon name="clock" size={14} color="ff9000" />
+                                <Icon name="clock" size={14} color="#ff9000" />
                                 <ProviderMetaText>8h às 18h</ProviderMetaText>
                             </ProviderMeta>
                         </ProviderInfo>
