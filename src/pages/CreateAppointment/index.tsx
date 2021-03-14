@@ -115,9 +115,13 @@ const CreateAppointment: React.FC = () => {
             date.setHours(selectedHour);
             date.setMinutes(0);
 
+            const localeDate = date.toLocaleString('pt-BR', {
+                timeZone: 'America/Sao_Paulo',
+            });
+
             await api.post('appointments', {
                 provider_id: selectedProvider,
-                date,
+                date: localeDate,
             });
 
             navigate('AppointmentCreated', { date: date.getTime() });
