@@ -13,6 +13,7 @@ import { FormHandles } from '@unform/core';
 import { useNavigation } from '@react-navigation/native';
 import * as Yup from 'yup';
 import Icon from 'react-native-vector-icons/Feather';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 import {
     Container,
@@ -112,12 +113,40 @@ const Profile: React.FC = () => {
                 );
             }
         },
-        [navigation],
+        [navigation, updateUser],
     );
 
     const handleGoBack = useCallback(() => {
         navigation.goBack();
     }, [navigation]);
+
+    const handleUpdateAvatar = useCallback(() => {
+        launchImageLibrary(
+            {
+                mediaType: 'photo',
+            },
+            response => {
+                if (response.didCancel) {
+                    return;
+                }
+                if (response.errorCode) {
+                    Alert.alert('Erro ao atualizar seu avatar');
+                    return;
+                }
+
+                const data = new FormData();
+                data.append('avatar', {
+                    uri: response.uri,
+                    type: 'image/jpeg',
+                    name: `${user.id}.jpg`,
+                });
+
+                api.patch('/users/avatar', data).then(apiResponse => {
+                    updateUser(apiResponse.data);
+                });
+            },
+        );
+    }, [updateUser, user.id]);
 
     return (
         <>
@@ -139,7 +168,7 @@ const Profile: React.FC = () => {
                             />
                         </BackButton>
 
-                        <UserAvatarButton>
+                        <UserAvatarButton onPress={handleUpdateAvatar}>
                             <UserAvatar source={{ uri: user.avatar_url }} />
                         </UserAvatarButton>
 
